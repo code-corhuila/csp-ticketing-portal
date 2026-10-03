@@ -1,0 +1,54 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "ticket": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": {},
+          "configurations": {
+            "production": { "target": "ticket:esbuild:production" },
+            "development": { "target": "ticket:esbuild:development", "dev": true }
+          },
+          "defaultConfiguration": "production"
+        },
+        "esbuild": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/ticket",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["es-module-shims"],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [{ "glob": "**/*", "input": "public" }],
+            "styles": []
+          },
+          "configurations": {
+            "production": { "outputHashing": "all" },
+            "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-architects/native-federation:build",
+          "options": { "target": "ticket:serve-original:development", "rebuildDelay": 0, "dev": true, "port": 4201 }
+        },
+        "serve-original": {
+          "builder": "@angular/build:dev-server",
+          "configurations": { "development": { "buildTarget": "ticket:esbuild:development" } },
+          "defaultConfiguration": "development",
+          "options": { "port": 4201 }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "dfb1761f-528b-4803-910b-d6a00042a01e"
+  }
+}
