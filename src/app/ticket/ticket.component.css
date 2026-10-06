@@ -1,0 +1,46 @@
+.ticket {
+  max-width: 22rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.75rem;
+  font-family: system-ui, sans-serif;
+}
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+.reservation-id {
+  color: #666;
+  font-size: 0.85rem;
+}
+dl {
+  margin: 1rem 0;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+}
+dt {
+  color: #666;
+}
+.seat {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.35rem;
+  background: #eee;
+  font-weight: 600;
+}
+.synthetic-note {
+  margin: 0.5rem 0 0;
+  color: #9f1239;
+  font-size: 0.75rem;
+  text-align: center;
+}
+.loading {
+  margin: 2rem;
+  text-align: center;
+  color: #666;
+}
