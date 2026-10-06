@@ -1,7 +1,7 @@
 const { withNativeFederation, shareAll } = require('@angular-architects/native-federation/config');
 
 module.exports = withNativeFederation({
-  name: 'ticket',
+  name: 'ticketing',
   exposes: {
     './routes': './src/app/ticket/ticket.routes.ts',
   },
