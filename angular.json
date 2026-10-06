@@ -37,13 +37,20 @@
         },
         "serve": {
           "builder": "@angular-architects/native-federation:build",
-          "options": { "target": "ticket:serve-original:development", "rebuildDelay": 0, "dev": true, "port": 4201 }
+          "options": { "target": "ticket:serve-original:development", "rebuildDelay": 0, "dev": true, "port": 4205 }
         },
         "serve-original": {
           "builder": "@angular/build:dev-server",
           "configurations": { "development": { "buildTarget": "ticket:esbuild:development" } },
           "defaultConfiguration": "development",
-          "options": { "port": 4201 }
+          "options": { "port": 4205 }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "ticket:esbuild:development",
+            "tsConfig": "tsconfig.spec.json"
+          }
         }
       }
     }
