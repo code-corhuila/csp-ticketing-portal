@@ -29,6 +29,16 @@ the flow spans both portals.
 The QR code is encoded client-side from `qrPayload` with the `qrcode-generator` package
 (no external QR service).
 
+## Styles
+
+The ticket screen follows the ticket mockup (`csp-docs/12-ux-ui/mockup/index.html`,
+HU-UI-002) with the design-system tokens (`csp-docs/12-ux-ui/design-system.md`,
+HU-UI-001). The shell owns the CSS tokens (`csp-front/src/styles.css`); this portal
+consumes them with `var()` where the design system defines them and never redefines
+them. Mockup-specific values with no HU-UI-001 token (the card gradient, the QR
+contrast) are documented as such. `src/index.html` mirrors the tokens for
+standalone runs only — the shell never loads this portal's `index.html`.
+
 Showtime renders in `en-US`/UTC by design while the data is synthetic. Once Cut 3 sources
 `showtimeStartsAt` from the API, it must render venue-local time — a UTC-rendered local
 showtime would show the wrong hour (tracked as a follow-up).
