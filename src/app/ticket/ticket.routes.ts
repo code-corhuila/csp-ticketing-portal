@@ -9,4 +9,4 @@ import { Component } from '@angular/core';
 export class TicketPlaceholderComponent {}
 
 /** Exposed to the shell as './routes'. */
-export const TICKET_ROUTES: Routes = [{ path: '', component: TicketPlaceholderComponent }];
+export const TICKETING_ROUTES: Routes = [{ path: '', component: TicketPlaceholderComponent }];
