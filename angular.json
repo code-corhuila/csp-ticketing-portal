@@ -44,6 +44,13 @@
           "configurations": { "development": { "buildTarget": "ticket:esbuild:development" } },
           "defaultConfiguration": "development",
           "options": { "port": 4205 }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "buildTarget": "ticket:esbuild:development",
+            "tsConfig": "tsconfig.spec.json"
+          }
         }
       }
     }
