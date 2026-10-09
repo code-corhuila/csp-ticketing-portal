@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = resolve(__filename, '..');
 
 const portalIndex = resolve(__dirname, '../src/index.html');
-const shellStyles = resolve(__dirname, '../../../csp-front/csp-front/src/styles.css');
+const shellStyles = resolve(__dirname, '../../../csp-front/src/styles.css');
 
 function extractRootTokens(content) {
   const match = content.match(/:root\s*{([^}]+)}/);
@@ -26,9 +26,11 @@ function extractRootTokens(content) {
 console.log('🔍 Checking token mirror sync...\n');
 
 if (!existsSync(shellStyles)) {
-  console.log('⏭️  SKIP: csp-front not found at', shellStyles);
-  console.log('   (Expected in CI / environments without csp-front cloned alongside)');
-  process.exit(0);
+  console.log('❌ FAIL: csp-front not found at', shellStyles);
+  console.log('   This check requires csp-front cloned alongside (standard sibling layout).');
+  console.log('   In CI: ensure csp-front is checked out next to csp-ticketing-portal.');
+  console.log('   Locally: clone csp-front as sibling or run from integrated workspace.');
+  process.exit(1);
 }
 
 const portalContent = readFileSync(portalIndex, 'utf-8');
