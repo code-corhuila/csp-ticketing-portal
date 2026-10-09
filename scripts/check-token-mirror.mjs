@@ -2,22 +2,36 @@ import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 
-export function extractRootTokens(content) {
-  const tokens = {};
+export function extractRootBlocks(content) {
+  const blocks = [];
   const rootRegex = /:root\s*{([^}]+)}/g;
   let match;
   while ((match = rootRegex.exec(content)) !== null) {
-    const block = match[1];
-    for (const line of block.split(';')) {
+    const blockContent = match[1];
+    const tokens = {};
+    for (const line of blockContent.split(';')) {
       const trimmed = line.trim();
       if (!trimmed) continue;
-      const parts = trimmed.split(':').map(p => p.trim());
-      if (parts.length === 2) {
-        tokens[parts[0]] = parts[1];
+      const colonIdx = trimmed.indexOf(':');
+      if (colonIdx === -1) continue;
+      const key = trimmed.slice(0, colonIdx).trim();
+      const value = trimmed.slice(colonIdx + 1).trim();
+      if (key) {
+        tokens[key] = value;
       }
     }
+    blocks.push({ tokens });
   }
-  return tokens;
+  return blocks;
+}
+
+export function extractRootTokens(content) {
+  const blocks = extractRootBlocks(content);
+  const merged = {};
+  for (const block of blocks) {
+    Object.assign(merged, block.tokens);
+  }
+  return merged;
 }
 
 function runTokenSyncCheck() {
@@ -27,8 +41,8 @@ function runTokenSyncCheck() {
   const portalIndex = resolve(__dirname, '../src/index.html');
   // Configurable path to shell's styles.css
   const shellStyles = resolve(__dirname, process.env.CSP_FRONT_PATH ?? '../../../csp-front/src/styles.css');
-  // Strict mode: fail if shell not found (default: false for CI single-repo)
-  const strictMode = process.env.TOKEN_MIRROR_STRICT === '1';
+  // Strict mode: fail if shell not found (default: true). Disable with TOKEN_MIRROR_STRICT=0
+  const strictMode = process.env.TOKEN_MIRROR_STRICT !== '0';
 
   console.log('🔍 Checking token mirror sync...\n');
 
@@ -51,38 +65,37 @@ function runTokenSyncCheck() {
   const portalContent = readFileSync(portalIndex, 'utf-8');
   const shellContent = readFileSync(shellStyles, 'utf-8');
 
-  const portalTokens = extractRootTokens(portalContent);
-  const shellTokens = extractRootTokens(shellContent);
+  const portalBlocks = extractRootBlocks(portalContent);
+  const shellBlocks = extractRootBlocks(shellContent);
 
-  let hasMismatch = false;
+  // Compare blocks by index (base, dark, etc.)
+  const maxBlocks = Math.max(portalBlocks.length, shellBlocks.length);
+  for (let i = 0; i < maxBlocks; i++) {
+    const pBlock = portalBlocks[i]?.tokens ?? {};
+    const sBlock = shellBlocks[i]?.tokens ?? {};
+    const blockLabel = i === 0 ? 'base' : `themed[${i}]`;
 
-  // Check portal tokens against shell (portal should match shell)
-  for (const [key, value] of Object.entries(portalTokens)) {
-    if (shellTokens[key] !== value) {
-      console.log(`❌ MISMATCH: ${key}`);
-      console.log(`   Portal: ${value}`);
-      console.log(`   Shell:  ${shellTokens[key] ?? 'NOT DEFINED'}`);
-      hasMismatch = true;
-    } else {
-      console.log(`✅ ${key}: ${value}`);
+    // Check portal tokens against shell
+    for (const [key, value] of Object.entries(pBlock)) {
+      if (sBlock[key] !== value) {
+        console.log(`❌ MISMATCH in ${blockLabel}: ${key}`);
+        console.log(`   Portal: ${value}`);
+        console.log(`   Shell:  ${sBlock[key] ?? 'NOT DEFINED'}`);
+        process.exit(1);
+      }
+    }
+
+    // Check shell tokens against portal
+    for (const [key, value] of Object.entries(sBlock)) {
+      if (!(key in pBlock)) {
+        console.log(`❌ MISSING IN PORTAL in ${blockLabel}: ${key} = ${value}`);
+        process.exit(1);
+      }
     }
   }
 
-  // Check shell tokens against portal (shell should not have extra tokens that portal misses)
-  for (const [key, value] of Object.entries(shellTokens)) {
-    if (!(key in portalTokens)) {
-      console.log(`❌ MISSING IN PORTAL: ${key} = ${value}`);
-      hasMismatch = true;
-    }
-  }
-
-  if (hasMismatch) {
-    console.log('\n💥 Token mirror is OUT OF SYNC with shell.');
-    process.exit(1);
-  } else {
-    console.log('\n✅ Token mirror is IN SYNC with shell.');
-    process.exit(0);
-  }
+  console.log('\n✅ Token mirror is IN SYNC with shell.');
+  process.exit(0);
 }
 
 // Only run CLI when executed directly (not imported)
