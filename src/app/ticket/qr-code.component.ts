@@ -22,9 +22,13 @@ interface QrCell {
     }
   `,
   styles: `
-    svg.qr { display: block; background: #fff; }
+    svg.qr { display: block; margin: 0 auto; background: #fff; }
     rect { fill: #111; }
-    .qr-unavailable { font: 12px sans-serif; color: #9f1239; }
+    .qr-unavailable {
+      font-family: var(--font-family-sans);
+      font-size: var(--font-size-xs);
+      color: var(--color-error);
+    }
   `,
 })
 export class QrCodeComponent {

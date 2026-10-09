@@ -1,46 +1,70 @@
+/*
+ * Design: ticket mockup (csp-docs/12-ux-ui/mockup/index.html, HU-UI-002)
+ * with the design-system tokens (csp-docs/12-ux-ui/design-system.md,
+ * HU-UI-001). The tokens are owned by the shell (csp-front/src/styles.css);
+ * this component only consumes them via var(). Standalone runs get the
+ * tokens from src/index.html, which the shell never loads.
+ */
 .ticket {
-  max-width: 22rem;
+  max-width: 27.5rem; /* 440px, the mockup's modal width */
   margin: 2rem auto;
-  padding: 1.5rem;
-  border: 1px solid #ddd;
-  border-radius: 0.75rem;
-  font-family: system-ui, sans-serif;
+  padding: 24px;
+  /* Mockup card gradient (HU-UI-002); HU-UI-001 defines no gradient token. */
+  background: linear-gradient(135deg, #1e1b4b, #0f172a);
+  border: 2px dashed var(--color-brand-primary);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+}
+header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  text-align: center;
 }
 h1 {
   margin: 0;
-  font-size: 1.5rem;
+  color: var(--color-brand-primary);
+  font-size: var(--font-size-xl);
 }
 .reservation-id {
-  color: #666;
-  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
 }
 dl {
   margin: 1rem 0;
 }
+dt {
+  color: var(--color-text-secondary);
+}
 .row {
   display: flex;
   justify-content: space-between;
+  gap: 15px;
   padding: 0.35rem 0;
+  font-size: var(--font-size-sm);
 }
-dt {
-  color: #666;
+dd {
+  margin: 0;
+  color: var(--color-brand-secondary);
+  font-weight: bold;
+  text-align: right;
 }
 .seat {
-  display: inline-block;
-  margin-left: 0.35rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 0.35rem;
-  background: #eee;
-  font-weight: 600;
+  color: var(--color-brand-secondary);
+  font-weight: bold;
+}
+.seat + .seat {
+  margin-left: 0.5rem;
 }
 .synthetic-note {
   margin: 0.5rem 0 0;
-  color: #9f1239;
-  font-size: 0.75rem;
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
   text-align: center;
 }
 .loading {
   margin: 2rem;
   text-align: center;
-  color: #666;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
