@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test"
+    "test": "ng test",
+    "check:tokens": "node scripts/check-token-mirror.mjs"
   },
   "dependencies": {
     "@angular/common": "^21.2.0",
