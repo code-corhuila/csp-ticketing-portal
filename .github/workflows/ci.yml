@@ -28,3 +28,50 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test -- --watch=false
+      - name: Check the CORS rule of the image
+        shell: bash
+        run: |
+          set -euo pipefail
+          image=csp-ticketing-portal:ci
+          container=csp-ticketing-portal-ci
+          docker build -f deploy/Dockerfile -t "$image" .
+
+          cleanup() {
+            docker rm -f "$container" >/dev/null 2>&1 || true
+            rm -f missing-env.log
+          }
+          trap cleanup EXIT
+
+          if docker run --rm "$image" >missing-env.log 2>&1; then
+            echo "The image unexpectedly started without CORS_ALLOWED_ORIGIN_REGEX" >&2
+            exit 1
+          fi
+          grep -q "CORS_ALLOWED_ORIGIN_REGEX" missing-env.log
+
+          docker run -d --name "$container" -p 127.0.0.1::4205 \
+            -e 'CORS_ALLOWED_ORIGIN_REGEX=^http://localhost:420[0-5]$' "$image"
+          port=$(docker port "$container" 4205/tcp | sed 's/.*://')
+          base_url="http://127.0.0.1:$port"
+          for attempt in $(seq 1 20); do
+            if curl -fsS "$base_url/health" >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS "$base_url/health" >/dev/null
+
+          module=$(node -e "const r=require('./dist/ticket/browser/remoteEntry.json'); process.stdout.write(r.exposes[0].outFileName)")
+          for asset in remoteEntry.json "$module"; do
+            headers=$(mktemp)
+            curl -fsS -D "$headers" -o /dev/null -H 'Origin: http://localhost:4200' "$base_url/$asset"
+            grep -qi '^Access-Control-Allow-Origin: http://localhost:4200' "$headers"
+            if [ "$asset" = remoteEntry.json ]; then
+              grep -qi '^Cache-Control:.*no-store' "$headers"
+            fi
+            curl -fsS -D "$headers" -o /dev/null -H 'Origin: http://evil.example' "$base_url/$asset"
+            if grep -qi '^Access-Control-Allow-Origin:' "$headers"; then
+              echo "Untrusted origin received Access-Control-Allow-Origin for $asset" >&2
+              exit 1
+            fi
+            rm -f "$headers"
+          done

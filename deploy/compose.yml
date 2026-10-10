@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ticketing:
     build:
@@ -10,7 +8,7 @@ services:
     ports:
       - "4205:4205"
     environment:
-      - CORS_ALLOWED_ORIGIN_REGEX=^http://localhost:420[0-5]$
+      CORS_ALLOWED_ORIGIN_REGEX: "${CORS_ALLOWED_ORIGIN_REGEX:-^http://localhost:420[0-5]$$}"
     networks:
       - csp-frontend
     healthcheck:
