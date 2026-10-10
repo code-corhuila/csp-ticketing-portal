@@ -13,14 +13,22 @@ if [ ! -f "$TEMPLATE" ]; then
     exit 1
 fi
 
-# Get the regex from environment (with default)
-CORS_REGEX="${CORS_ALLOWED_ORIGIN_REGEX:-^http://localhost:420[0-5]$}"
+if [ -z "${CORS_ALLOWED_ORIGIN_REGEX:-}" ]; then
+    echo "ERROR: CORS_ALLOWED_ORIGIN_REGEX must be set" >&2
+    exit 1
+fi
 
-# Escape special characters for sed
-ESCAPED_REGEX=$(printf '%s\n' "$CORS_REGEX" | sed 's/[[\.*^$()+?{|\\]/\\&/g')
-
-# Render template
-sed "s/{{CORS_ALLOWED_ORIGIN_REGEX}}/$ESCAPED_REGEX/g" "$TEMPLATE" > "$OUTPUT"
+export CORS_REGEX="$CORS_ALLOWED_ORIGIN_REGEX"
+awk '
+    {
+        line = $0
+        while (match(line, /\{\{CORS_ALLOWED_ORIGIN_REGEX\}\}/)) {
+            printf "%s%s", substr(line, 1, RSTART - 1), ENVIRON["CORS_REGEX"]
+            line = substr(line, RSTART + RLENGTH)
+        }
+        print line
+    }
+' "$TEMPLATE" > "$OUTPUT"
 
 echo "CORS configuration rendered from template"
-echo "Using regex: $CORS_REGEX"
+echo "Using regex: $CORS_ALLOWED_ORIGIN_REGEX"
