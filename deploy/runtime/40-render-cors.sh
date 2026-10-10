@@ -18,6 +18,22 @@ if [ -z "${CORS_ALLOWED_ORIGIN_REGEX:-}" ]; then
     exit 1
 fi
 
+case "$CORS_ALLOWED_ORIGIN_REGEX" in
+    ^*) ;;
+    *)
+        echo "ERROR: CORS_ALLOWED_ORIGIN_REGEX must start with ^" >&2
+        exit 1
+        ;;
+esac
+
+case "$CORS_ALLOWED_ORIGIN_REGEX" in
+    *\$) ;;
+    *)
+        echo "ERROR: CORS_ALLOWED_ORIGIN_REGEX must end with $" >&2
+        exit 1
+        ;;
+esac
+
 export CORS_REGEX="$CORS_ALLOWED_ORIGIN_REGEX"
 awk '
     {
