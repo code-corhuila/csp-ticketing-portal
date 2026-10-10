@@ -1,0 +1,11 @@
+# This file is rendered at container startup by 40-render-cors.sh
+# CORS_ALLOWED_ORIGIN_REGEX is provided via environment variable
+
+set $cors_origin "";
+
+if ($http_origin ~ {{CORS_ALLOWED_ORIGIN_REGEX}}) {
+    set $cors_origin $http_origin;
+}
+
+add_header Access-Control-Allow-Origin $cors_origin;
+add_header Vary Origin;
