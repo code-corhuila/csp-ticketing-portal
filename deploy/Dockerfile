@@ -1,8 +1,7 @@
 # syntax = docker/dockerfile:1.4
 
 # Stage 1: Build the application
-FROM node:22-alpine AS builder
-
+FROM node:22.14.0-alpine3.20 AS builder
 WORKDIR /app
 
 # Copy package files first for better caching
