@@ -1,0 +1,32 @@
+    @if (ticket(); as t) {
+      <section class="ticket">
+        <header>
+          <h1>{{ t.movieTitle }}</h1>
+          <p class="reservation-id">Reservation {{ t.reservationId }}</p>
+        </header>
+
+        <dl>
+          <div class="row">
+            <dt>Room</dt>
+            <dd>{{ t.roomName }}</dd>
+          </div>
+          <div class="row">
+            <dt>Showtime</dt>
+            <dd>{{ showtime() }}</dd>
+          </div>
+          <div class="row">
+            <dt>Seats</dt>
+            <dd>
+              @for (seat of t.seatLabels; track seat) {
+                <span class="seat">{{ seat }}</span>
+              }
+            </dd>
+          </div>
+        </dl>
+
+        <app-qr-code [payload]="t.qrPayload" />
+        <p class="synthetic-note">Synthetic ticket — not valid for entry.</p>
+      </section>
+    } @else {
+      <p class="loading">Loading ticket…</p>
+    }
