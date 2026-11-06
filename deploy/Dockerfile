@@ -19,9 +19,6 @@ RUN npm run build
 # Stage 2: Serve with nginx
 FROM nginx:alpine AS runtime
 
-# Install curl for health checks
-RUN apk add --no-cache curl
-
 # Copy custom nginx config
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -35,12 +32,12 @@ RUN chmod +x /docker-entrypoint.d/40-render-cors.sh
 # Copy built assets from builder stage
 COPY --from=builder /app/dist/ticket/browser /usr/share/nginx/html
 
-# Expose port 4205 (ticketing port per ADR-025)
-EXPOSE 4205
+# Serve on port 80 like the shell and the other portals (ADR-026); 4205 of ADR-025 is the host port
+EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:4205/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/health || exit 1
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]

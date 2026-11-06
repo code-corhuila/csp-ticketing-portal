@@ -20,7 +20,7 @@ it uses the shell's HTTP client (ADR-022).
 ### Container deployment
 
 Build and run the portal with `docker compose -f deploy/compose.yml up --build`.
-The container serves the federated remote on port `4205` and joins the external
+The container serves the federated remote on port `80`, published as `4205` on the host, and joins the external
 `csp-frontend` network. Set `CORS_ALLOWED_ORIGIN_REGEX` to a regular expression
 matching the shell's origin; it defaults to `^http://localhost:420[0-5]$` for local
 development. The container refuses to start if this variable is empty or unset.
