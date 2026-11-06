@@ -8,6 +8,9 @@ and is tagged `v<version>` once it is merged.
 
 ## [Unreleased]
 
+### Changed
+- Everything the user sees is in Spanish (csp-ticketing-portal#36): the labels Sala, Función and Asientos, the reservation line, the loading text, the note of the synthetic ticket, the accessible text of the QR code and its unavailable message, the fallback message of `asApiError`, `lang="es"` in `index.html`, the date format (`es`, still UTC) and the synthetic data (room and movie title). The specs assert the new texts. Identifiers and comments stay in English.
+
 ## [2.0.0] - 2026-10-11
 
 MVP 2 (Cut 2). Story [#3](https://github.com/code-corhuila/csp-ticketing-portal/issues/3): the client sees the ticket confirmation
