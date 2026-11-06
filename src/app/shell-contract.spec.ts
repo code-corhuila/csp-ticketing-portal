@@ -20,6 +20,6 @@ describe('asApiError', () => {
 
     expect(wrapped.status).toBe(0);
     expect(wrapped.code).toBe('UNKNOWN');
-    expect(wrapped.userMessage).toBe('Something went wrong.');
+    expect(wrapped.userMessage).toBe('Algo salió mal. Intenta de nuevo.');
   });
 });

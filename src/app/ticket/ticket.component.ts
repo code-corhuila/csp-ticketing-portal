@@ -22,7 +22,7 @@ export class TicketComponent {
   protected readonly showtime = computed(() => {
     const t = this.ticket();
     return t
-      ? new Intl.DateTimeFormat('en-US', {
+      ? new Intl.DateTimeFormat('es', {
           dateStyle: 'medium',
           timeStyle: 'short',
           timeZone: 'UTC',

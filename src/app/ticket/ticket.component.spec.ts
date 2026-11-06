@@ -23,7 +23,7 @@ describe('TicketComponent', () => {
     expect(el.textContent).toContain(TICKET_DATA.movieTitle);
     expect(el.textContent).toContain(TICKET_DATA.roomName);
     expect(el.textContent).toContain(TICKET_DATA.reservationId);
-    expect(el.textContent).toContain('Oct 2, 2026');
+    expect(el.textContent).toContain('2 oct 2026');
     for (const seat of TICKET_DATA.seatLabels) {
       expect(el.textContent).toContain(seat);
     }
@@ -57,6 +57,6 @@ describe('TicketComponent', () => {
     fixture.detectChanges();
 
     const note: HTMLElement | null = fixture.nativeElement.querySelector('.synthetic-note');
-    expect(note?.textContent).toContain('not valid for entry');
+    expect(note?.textContent).toContain('no es válido para ingresar');
   });
 });
