@@ -20,5 +20,5 @@ export interface ApiError {
 export function asApiError(err: unknown): ApiError {
   return typeof err === 'object' && err !== null && 'userMessage' in err
     ? (err as ApiError)
-    : { status: 0, code: 'UNKNOWN', message: String(err), details: [], traceId: '', userMessage: 'Something went wrong.' };
+    : { status: 0, code: 'UNKNOWN', message: String(err), details: [], traceId: '', userMessage: 'Algo salió mal. Intenta de nuevo.' };
 }

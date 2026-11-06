@@ -18,8 +18,8 @@ export interface TicketData {
 
 export const TICKET_DATA: TicketData = {
   reservationId: '55555555-5555-5555-5555-555555555555',
-  movieTitle: 'The Silent Reel',
-  roomName: 'Room 1',
+  movieTitle: 'El Carrete Silencioso',
+  roomName: 'Sala 1',
   showtimeStartsAt: '2026-10-02T20:00:00Z',
   seatLabels: ['A1', 'A2'],
   qrPayload: 'CSP-55555555-A1-A2',
