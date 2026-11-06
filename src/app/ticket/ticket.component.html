@@ -2,20 +2,20 @@
       <section class="ticket">
         <header>
           <h1>{{ t.movieTitle }}</h1>
-          <p class="reservation-id">Reservation {{ t.reservationId }}</p>
+          <p class="reservation-id">Reserva {{ t.reservationId }}</p>
         </header>
 
         <dl>
           <div class="row">
-            <dt>Room</dt>
+            <dt>Sala</dt>
             <dd>{{ t.roomName }}</dd>
           </div>
           <div class="row">
-            <dt>Showtime</dt>
+            <dt>Función</dt>
             <dd>{{ showtime() }}</dd>
           </div>
           <div class="row">
-            <dt>Seats</dt>
+            <dt>Asientos</dt>
             <dd>
               @for (seat of t.seatLabels; track seat) {
                 <span class="seat">{{ seat }}</span>
@@ -25,8 +25,8 @@
         </dl>
 
         <app-qr-code [payload]="t.qrPayload" />
-        <p class="synthetic-note">Synthetic ticket — not valid for entry.</p>
+        <p class="synthetic-note">Ticket de prueba: no es válido para ingresar.</p>
       </section>
     } @else {
-      <p class="loading">Loading ticket…</p>
+      <p class="loading">Cargando ticket…</p>
     }

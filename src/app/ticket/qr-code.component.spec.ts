@@ -69,7 +69,7 @@ describe('QrCodeComponent', () => {
     expect(fixture.nativeElement.querySelectorAll('svg rect').length).toBe(0);
     expect(fixture.nativeElement.querySelector('svg')).toBeNull();
     const alert = fixture.nativeElement.querySelector('[role="alert"]');
-    expect(alert?.textContent).toContain('unavailable');
+    expect(alert?.textContent).toContain('no disponible');
   });
 
   it('renders nothing at all when no payload is set', () => {
