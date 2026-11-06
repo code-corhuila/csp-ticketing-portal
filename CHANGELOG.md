@@ -10,6 +10,7 @@ and is tagged `v<version>` once it is merged.
 
 ### Changed
 - Everything the user sees is in Spanish (csp-ticketing-portal#36): the labels Sala, Función and Asientos, the reservation line, the loading text, the note of the synthetic ticket, the accessible text of the QR code and its unavailable message, the fallback message of `asApiError`, `lang="es"` in `index.html`, the date format (`es`, still UTC) and the synthetic data (room and movie title). The specs assert the new texts. Identifiers and comments stay in English.
+- The container is aligned with the shell and the other portals (csp-docs ADR-026, Q-012): nginx listens on port `80` and the image exposes `80`; `deploy/compose.yml` publishes `4205:80` and names the service `csp-ticketing-portal` without a fixed `image`; the healthcheck is `wget --no-verbose --tries=1 --spider http://127.0.0.1/health` in the Dockerfile and in the compose file, and `curl` is no longer installed in the image. The CORS rule is unchanged and the CI job reaches the container on port 80. Before this it was the only container with its own port and `curl` check (csp-ticketing-portal#35).
 
 ## [2.0.0] - 2026-10-11
 
