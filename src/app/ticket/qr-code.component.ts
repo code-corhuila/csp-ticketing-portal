@@ -11,9 +11,9 @@ interface QrCell {
   selector: 'app-qr-code',
   template: `
     @if (failed()) {
-      <span class="qr-unavailable" role="alert">QR code unavailable</span>
+      <span class="qr-unavailable" role="alert">Código QR no disponible</span>
     } @else if (hasMatrix()) {
-      <svg class="qr" role="img" aria-label="Ticket QR code" width="160" height="160"
+      <svg class="qr" role="img" aria-label="Código QR del ticket" width="160" height="160"
            shape-rendering="crispEdges" [attr.viewBox]="viewBox()">
         @for (cell of darkCells(); track $index) {
           <rect [attr.x]="cell.x" [attr.y]="cell.y" width="1" height="1" />
