@@ -8,6 +8,9 @@ and is tagged `v<version>` once it is merged.
 
 ## [Unreleased]
 
+### Added
+- Notifications page at `/dashboard/notifications` (HU-FE-TICKETING-003, csp-ticketing-portal#41): it lists the signed-in client's notifications from `GET /api/v1/ticketing/me/notifications` through the shell's HTTP client, newest first, each with its type, message and time (UTC, `es`); "Cargar más" appends the next page while `meta.totalPages` allows it; an empty state in Spanish; on error it shows the `userMessage` of the shell error with a retry action that repeats the failed page and keeps what was already loaded. The specs cover the API client against the contract response shape and the page states.
+
 ### Fixed
 - `asApiError` no longer takes any object with a `userMessage` for a shell error (csp-ticketing-portal#5): a complete error passes through, and anything else is normalized field by field, keeping the valid status, code, message, details and trace id and giving a safe default to the rest, so a drift of the shape does not swallow the reference of the failed request. The specs cover a partial error, a wrong type and `null`.
 - `tsconfig.federation.json` uses forward slashes in `include` (it had Windows separators, which match nothing on Linux) and lists `qrcode-generator`, which the build adds. The federation build rewrites this file on Windows; do not commit that rewrite.
