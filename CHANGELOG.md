@@ -8,6 +8,10 @@ and is tagged `v<version>` once it is merged.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-07
+
+Release of the Ticketing portal work validated in `qa` after 2.0.0: HU-FE-TICKETING-001 (Spanish text, port 80 container, shell error shape), HU-FE-TICKETING-002 (My Tickets page) and HU-FE-TICKETING-003 (notifications page).
+
 ### Added
 - The page `/dashboard/tickets` shows the real tickets of the client from `GET /api/v1/ticketing/me/tickets` (HU-FE-TICKETING-002, csp-ticketing-portal#40): movie, room, showtime, seats, concessions and QR, an empty state, "Hora por confirmar" for a null `showtimeStartsAt`, the PDF download (or a note that it is being prepared) and the shell `userMessage` with a retry on error. The synthetic ticket is removed: the page never falls back to synthetic data.
 - Notifications page at `/dashboard/notifications` (HU-FE-TICKETING-003, csp-ticketing-portal#41): it lists the signed-in client's notifications from `GET /api/v1/ticketing/me/notifications` through the shell's HTTP client, newest first, each with its type, message and time (UTC, `es`); "Cargar más" appends the next page while `meta.totalPages` allows it; an empty state in Spanish; on error it shows the `userMessage` of the shell error with a retry action that repeats the failed page and keeps what was already loaded. The specs cover the API client against the contract response shape and the page states.
