@@ -1,19 +1,17 @@
-/*
- * Design: ticket mockup (csp-docs/12-ux-ui/mockup/index.html, HU-UI-002)
- * with the design-system tokens (csp-docs/12-ux-ui/design-system.md,
- * HU-UI-001). The tokens are owned by the shell (csp-front/src/styles.css);
- * this component only consumes them via var(). Standalone runs get the
- * tokens from src/index.html, which the shell never loads.
- */
-.ticket {
-  max-width: 27.5rem; /* 440px, the mockup's modal width */
+/* Ticket card of the mockup (HU-UI-002) with the shell design tokens (HU-UI-001), consumed via var(). */
+.page {
+  display: block;
+  max-width: 27.5rem;
   margin: 2rem auto;
+  padding: 0 1rem;
+  color: var(--color-text-primary);
+}
+.ticket {
+  margin: 1.5rem 0;
   padding: 24px;
-  /* Mockup card gradient (HU-UI-002); HU-UI-001 defines no gradient token. */
   background: linear-gradient(135deg, #1e1b4b, #0f172a);
   border: 2px dashed var(--color-brand-primary);
   border-radius: var(--radius-lg);
-  color: var(--color-text-primary);
 }
 header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -21,7 +19,7 @@ header {
   margin-bottom: 16px;
   text-align: center;
 }
-h1 {
+h2 {
   margin: 0;
   color: var(--color-brand-primary);
   font-size: var(--font-size-xl);
@@ -49,22 +47,42 @@ dd {
   font-weight: bold;
   text-align: right;
 }
-.seat {
-  color: var(--color-brand-secondary);
-  font-weight: bold;
-}
 .seat + .seat {
   margin-left: 0.5rem;
 }
-.synthetic-note {
-  margin: 0.5rem 0 0;
-  color: var(--color-error);
-  font-size: var(--font-size-xs);
-  text-align: center;
+.concessions h3 {
+  margin: 0.5rem 0 0.25rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: normal;
 }
-.loading {
-  margin: 2rem;
+.concessions ul {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  color: var(--color-brand-secondary);
+}
+button {
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem 1.25rem;
+  background: var(--color-brand-primary);
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+.pdf-pending,
+.loading,
+.empty {
+  margin: 1rem 0 0;
   text-align: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+}
+.error,
+.pdf-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  text-align: center;
 }
