@@ -8,6 +8,9 @@ and is tagged `v<version>` once it is merged.
 
 ## [Unreleased]
 
+### Added
+- The page `/dashboard/tickets` shows the real tickets of the client from `GET /api/v1/ticketing/me/tickets` (HU-FE-TICKETING-002, csp-ticketing-portal#40): movie, room, showtime, seats, concessions and QR, an empty state, "Hora por confirmar" for a null `showtimeStartsAt`, the PDF download (or a note that it is being prepared) and the shell `userMessage` with a retry on error. The synthetic ticket is removed: the page never falls back to synthetic data.
+
 ### Fixed
 - `asApiError` no longer takes any object with a `userMessage` for a shell error (csp-ticketing-portal#5): a complete error passes through, and anything else is normalized field by field, keeping the valid status, code, message, details and trace id and giving a safe default to the rest, so a drift of the shape does not swallow the reference of the failed request. The specs cover a partial error, a wrong type and `null`.
 - `tsconfig.federation.json` uses forward slashes in `include` (it had Windows separators, which match nothing on Linux) and lists `qrcode-generator`, which the build adds. The federation build rewrites this file on Windows; do not commit that rewrite.
