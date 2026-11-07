@@ -1,0 +1,34 @@
+<section class="notifications">
+  <h1>Notificaciones</h1>
+
+  @if (firstLoad()) {
+    <p class="status">Cargando notificaciones…</p>
+  }
+
+  @if (isEmpty()) {
+    <p class="status">Aún no tienes notificaciones.</p>
+  }
+
+  @if (notifications().length > 0) {
+    <ul>
+      @for (item of notifications(); track item.id) {
+        <li class="notification">
+          <span class="type">{{ typeLabel(item) }}</span>
+          <p class="message">{{ item.message }}</p>
+          <time [attr.datetime]="item.timestamp">{{ time(item) }}</time>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (error(); as err) {
+    <div class="error" role="alert">
+      <p>{{ err.userMessage }}</p>
+      <button type="button" class="retry" (click)="loadNextPage()">Reintentar</button>
+    </div>
+  }
+
+  @if (canLoadMore()) {
+    <button type="button" class="load-more" [disabled]="loading()" (click)="loadNextPage()">Cargar más</button>
+  }
+</section>
