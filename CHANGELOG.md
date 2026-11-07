@@ -10,6 +10,7 @@ and is tagged `v<version>` once it is merged.
 
 ### Added
 - The page `/dashboard/tickets` shows the real tickets of the client from `GET /api/v1/ticketing/me/tickets` (HU-FE-TICKETING-002, csp-ticketing-portal#40): movie, room, showtime, seats, concessions and QR, an empty state, "Hora por confirmar" for a null `showtimeStartsAt`, the PDF download (or a note that it is being prepared) and the shell `userMessage` with a retry on error. The synthetic ticket is removed: the page never falls back to synthetic data.
+- Notifications page at `/dashboard/notifications` (HU-FE-TICKETING-003, csp-ticketing-portal#41): it lists the signed-in client's notifications from `GET /api/v1/ticketing/me/notifications` through the shell's HTTP client, newest first, each with its type, message and time (UTC, `es`); "Cargar más" appends the next page while `meta.totalPages` allows it; an empty state in Spanish; on error it shows the `userMessage` of the shell error with a retry action that repeats the failed page and keeps what was already loaded. The specs cover the API client against the contract response shape and the page states.
 
 ### Fixed
 - `asApiError` no longer takes any object with a `userMessage` for a shell error (csp-ticketing-portal#5): a complete error passes through, and anything else is normalized field by field, keeping the valid status, code, message, details and trace id and giving a safe default to the rest, so a drift of the shape does not swallow the reference of the failed request. The specs cover a partial error, a wrong type and `null`.
