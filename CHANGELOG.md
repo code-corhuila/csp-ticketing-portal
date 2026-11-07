@@ -8,6 +8,14 @@ and is tagged `v<version>` once it is merged.
 
 ## [Unreleased]
 
+### Fixed
+- `asApiError` no longer takes any object with a `userMessage` for a shell error (csp-ticketing-portal#5): a complete error passes through, and anything else is normalized field by field, keeping the valid status, code, message, details and trace id and giving a safe default to the rest, so a drift of the shape does not swallow the reference of the failed request. The specs cover a partial error, a wrong type and `null`.
+- `tsconfig.federation.json` uses forward slashes in `include` (it had Windows separators, which match nothing on Linux) and lists `qrcode-generator`, which the build adds. The federation build rewrites this file on Windows; do not commit that rewrite.
+
+### Changed
+- Everything the user sees is in Spanish (csp-ticketing-portal#36): the labels Sala, Función and Asientos, the reservation line, the loading text, the note of the synthetic ticket, the accessible text of the QR code and its unavailable message, the fallback message of `asApiError`, `lang="es"` in `index.html`, the date format (`es`, still UTC) and the synthetic data (room and movie title). The specs assert the new texts. Identifiers and comments stay in English.
+- The container is aligned with the shell and the other portals (csp-docs ADR-026, Q-012): nginx listens on port `80` and the image exposes `80`; `deploy/compose.yml` publishes `4205:80` and names the service `csp-ticketing-portal` without a fixed `image`; the healthcheck is `wget --no-verbose --tries=1 --spider http://127.0.0.1/health` in the Dockerfile and in the compose file, and `curl` is no longer installed in the image. The CORS rule is unchanged and the CI job reaches the container on port 80. Before this it was the only container with its own port and `curl` check (csp-ticketing-portal#35).
+
 ## [2.0.0] - 2026-10-11
 
 MVP 2 (Cut 2). Story [#3](https://github.com/code-corhuila/csp-ticketing-portal/issues/3): the client sees the ticket confirmation
