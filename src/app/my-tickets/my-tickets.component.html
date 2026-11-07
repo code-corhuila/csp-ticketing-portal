@@ -1,0 +1,66 @@
+<main class="page">
+  <h1>Mis tickets</h1>
+
+  @for (t of tickets(); track t.id) {
+    <article class="ticket">
+      <header>
+        <h2>{{ t.movieTitle }}</h2>
+        <p class="reservation-id">Reserva {{ t.reservationId }}</p>
+      </header>
+
+      <dl>
+        <div class="row">
+          <dt>Sala</dt>
+          <dd>{{ t.roomName }}</dd>
+        </div>
+        <div class="row">
+          <dt>Función</dt>
+          <dd>{{ showtime(t) }}</dd>
+        </div>
+        <div class="row">
+          <dt>Asientos</dt>
+          <dd>
+            @for (seat of t.seatLabels; track seat) {
+              <span class="seat">{{ seat }}</span>
+            }
+          </dd>
+        </div>
+      </dl>
+
+      @if (t.concessions?.length) {
+        <section class="concessions">
+          <h3>Confitería</h3>
+          <ul>
+            @for (item of t.concessions; track $index) {
+              <li>{{ item.quantity }} × {{ item.name }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <app-qr-code [payload]="t.qrPayload" />
+
+      @if (t.pdfUrl) {
+        <button type="button" class="download" (click)="downloadPdf(t)">Descargar PDF</button>
+      } @else {
+        <p class="pdf-pending">El PDF se está preparando. Vuelve a consultar en unos minutos.</p>
+      }
+      @if (pdfErrors()[t.id]; as message) {
+        <p class="pdf-error" role="alert">{{ message }}</p>
+      }
+    </article>
+  }
+
+  @if (loading()) {
+    <p class="loading">Cargando tus tickets…</p>
+  } @else if (error(); as err) {
+    <div class="error" role="alert">
+      <p>{{ err.userMessage }}</p>
+      <button type="button" class="retry" (click)="loadNext()">Reintentar</button>
+    </div>
+  } @else if (tickets().length === 0) {
+    <p class="empty">Aún no tienes tickets. Cuando compres uno, aparecerá aquí.</p>
+  } @else if (hasMore()) {
+    <button type="button" class="more" (click)="loadNext()">Ver más tickets</button>
+  }
+</main>

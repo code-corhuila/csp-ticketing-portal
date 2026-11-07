@@ -13,7 +13,7 @@ it uses the shell's HTTP client (ADR-022).
 
 - **Run inside the shell (normal):** start the shell; it consumes this portal's `./routes`.
 - **Run standalone (development only):** `npm start` → `http://localhost:4205`. Standalone
-  uses the burned-in dataset, so no backend is needed.
+  has no HTTP client: to see real tickets run it through the shell.
 - **Build:** `npm run build` → `dist/ticket`.
 - **Tests:** `npm test -- --watch=false` (Vitest + jsdom via `@angular/build:unit-test`).
 
@@ -25,14 +25,10 @@ The container serves the federated remote on port `80`, published as `4205` on t
 matching the shell's origin; it defaults to `^http://localhost:420[0-5]$` for local
 development. The container refuses to start if this variable is empty or unset.
 
-### Synthetic dataset (Cut 2)
+### My tickets (HU-FE-TICKETING-002)
 
-`src/app/ticket/data/ticket.dataset.ts` holds the typed constant `TICKET_DATA`:
-reservation ID, movie title, room, showtime, seat labels and QR payload. The UI reads it
-through `TicketService.getTicket()`, so Cut 3 can swap that service to the Ticketing API
-without touching the pages. The seat labels (`A1`, `A2`) are the ones the client picked
-in the booking step — that is what keeps scenario 3 of HU-FE-TICKETING-001 valid while
-the flow spans both portals.
+`src/app/my-tickets/` is the page of `/dashboard/tickets`: `TicketsApiService` reads the tickets and their PDF
+through the shell's HTTP client; a failure shows the shell `userMessage` with a retry, never synthetic data.
 
 The QR code is encoded client-side from `qrPayload` with the `qrcode-generator` package
 (no external QR service).
@@ -46,10 +42,6 @@ consumes them with `var()` where the design system defines them and never redefi
 them. Mockup-specific values with no HU-UI-001 token (the card gradient, the QR
 contrast) are documented as such. `src/index.html` mirrors the tokens for
 standalone runs only — the shell never loads this portal's `index.html`.
-
-Showtime renders in `en-US`/UTC by design while the data is synthetic. Once Cut 3 sources
-`showtimeStartsAt` from the API, it must render venue-local time — a UTC-rendered local
-showtime would show the wrong hour (tracked as a follow-up).
 
 ## Branching
 
