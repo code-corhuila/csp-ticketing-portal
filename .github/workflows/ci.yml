@@ -48,9 +48,9 @@ jobs:
           fi
           grep -q "CORS_ALLOWED_ORIGIN_REGEX" missing-env.log
 
-          docker run -d --name "$container" -p 127.0.0.1::4205 \
+          docker run -d --name "$container" -p 127.0.0.1::80 \
             -e 'CORS_ALLOWED_ORIGIN_REGEX=^http://localhost:420[0-5]$' "$image"
-          port=$(docker port "$container" 4205/tcp | sed 's/.*://')
+          port=$(docker port "$container" 80/tcp | sed 's/.*://')
           base_url="http://127.0.0.1:$port"
           for attempt in $(seq 1 20); do
             if curl -fsS "$base_url/health" >/dev/null; then

@@ -20,6 +20,30 @@ describe('asApiError', () => {
 
     expect(wrapped.status).toBe(0);
     expect(wrapped.code).toBe('UNKNOWN');
-    expect(wrapped.userMessage).toBe('Something went wrong.');
+    expect(wrapped.userMessage).toBe('Algo salió mal. Intenta de nuevo.');
+  });
+
+  it('keeps the trace id and the code of an error that lost its user message', () => {
+    const wrapped = asApiError({ status: 503, code: 'UPSTREAM_DOWN', message: 'down', traceId: 't-9', details: [{ field: 'a', message: 'b' }, {}] });
+
+    expect(wrapped.status).toBe(503);
+    expect(wrapped.code).toBe('UPSTREAM_DOWN');
+    expect(wrapped.traceId).toBe('t-9');
+    expect(wrapped.details).toEqual([{ field: 'a', message: 'b' }]);
+    expect(wrapped.userMessage).toBe('Algo salió mal. Intenta de nuevo.');
+  });
+
+  it('does not take an object for a shell error just because it has a userMessage', () => {
+    const wrapped = asApiError({ userMessage: 'hi', status: 'x', traceId: 7 });
+
+    expect(wrapped.status).toBe(0);
+    expect(wrapped.code).toBe('UNKNOWN');
+    expect(wrapped.traceId).toBe('');
+    expect(wrapped.userMessage).toBe('hi');
+  });
+
+  it('wraps null and undefined', () => {
+    expect(asApiError(null).code).toBe('UNKNOWN');
+    expect(asApiError(undefined).message).toBe('undefined');
   });
 });
